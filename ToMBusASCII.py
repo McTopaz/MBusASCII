@@ -11,7 +11,7 @@ ITEM: The item to read
 PREFIX: (Optional) Each byte will start with the prefix
 SUFFIX: (Optional) Each byte will end with the suffix
 
-ToMBusASCII.py 0 0 0 a.b.c => 02 30 30 30 30 30 30 41 2E 42 2E 43 03
+ToMBusASCII.py 0 0 0 a.b.c => 02 30 30 30 30 30 30 41 2E 42 2E 43 03 (without spaces)
 ToMBusASCII.py 0 0 0 a.b.c 0x , => 0x02, 0x30, 0x30, 0x30, 0x30, 0x30, 0x30, 0x41, 0x2E, 0x42, 0x2E, 0x43, 0x03,
 '''
 
@@ -38,9 +38,9 @@ prefix = "0x"
 suffix = ", "
 
 # Get arguments.
-tid = str(("%02d"%(int(sys.argv[1])))[:2]) # Parse to always 2 digits.
-pid = str(("%02d"%(int(sys.argv[2])))[:2]) # Parse to always 2 digits.
-adr = str(("%02d"%(int(sys.argv[3])))[:2]) # Parse to always 2 digits.
+tid = str(("%02d"%(int(sys.argv[1])))[:2]) # Parse tid to always 2 digits.
+pid = str(("%02d"%(int(sys.argv[2])))[:2]) # Parse pid to always 2 digits.
+adr = str(("%02d"%(int(sys.argv[3])))[:2]) # Parse adr to always 2 digits.
 item = sys.argv[4]
 prefix = sys.argv[5] if len(sys.argv) > 5 else ""
 suffix = sys.argv[6] if len(sys.argv) > 6 else ""
@@ -49,29 +49,24 @@ includeCheckSum = pid == "01"	# Flag if checksum should be included in request.
 
 # Create the request
 request = struct.pack("B", stx)
-request += struct.pack(">H", (((int(tid[0])+0x30) << 8) + int(tid[1]) + 0x30))
-request += struct.pack(">H", (((int(pid[0])+0x30) << 8) + int(pid[1]) + 0x30))
-request += struct.pack(">H", (((int(adr[0])+0x30) << 8) + int(adr[1]) + 0x30))
+request += bytearray(tid, 'ascii')
+request += bytearray(pid, 'ascii')
+request += bytearray(adr, 'ascii')
 request += bytearray(item, 'ascii')
 
 # Include checksum if PID = 1.
 if includeCheckSum:
 	for b in request[1:]:
 		crc += b
-		#print("%02X"%b)
 		
-	print("%s   %x"%(crc, crc))
 	crc = crc & 0xFF
-	print("%s   %x"%(crc, crc))
-	crc = ("%02x"%(crc))
-	print(crc)
-	request += struct.pack(">H", (((int(crc[0], 16)+0x30) << 8) + int(crc[1], 16) + 0x30))
+	crc = ("%02X"%(crc))
+	request += bytearray(crc, 'ascii')
 
 request += struct.pack("B", etx)
 
 # Print each byte in request.
 for b in request:
-	#print("%s%02X%s"%(prefix, b, suffix), end="")
-	print("%s%02X%s"%(prefix, b, " "), end="")
+	print("%s%02X%s"%(prefix, b, suffix), end="")
 print("")
 
