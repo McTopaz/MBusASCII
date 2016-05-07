@@ -65,6 +65,10 @@ if includeCheckSum:
 
 request += struct.pack("B", etx)
 
+# =====================
+# === Print results ===
+# =====================
+
 # Print each byte in request.
 for b in request:
 	print("%s%02X%s"%(prefix, b, suffix), end="")
