@@ -186,18 +186,17 @@ else:
 # === Print results ===
 # =====================
 	
-print("TID:\t%s\t(%x, %x)"%(tid, response[1], response[2]))
-print("PID:\t%s\t(%x, %x)"%(pid, response[3], response[4]))
-print("ADR:\t%s\t(%x, %x)"%(adr, response[5], response[6]))
-
-if checkSumIncluded:
-	print("CRC:\t%X\t(%x, %x)"%(crc, response[length-3], response[length-2]))
+# These are kept for output if needed"
+#print("TID:\t%s\t(%x, %x)"%(tid, response[1], response[2]))
+#print("PID:\t%s\t(%x, %x)"%(pid, response[3], response[4]))
+#print("ADR:\t%s\t(%x, %x)"%(adr, response[5], response[6]))
+#if checkSumIncluded:
+#	print("CRC:\t%X\t(%x, %x)"%(crc, response[length-3], response[length-2]))
 
 if isAck:
-	print("DATA:\t%s"%(data))
+	#print("DATA:\t%s"%(data))
+	print("ACK:\t%s"%(data))
 	
 if isNak:
-	print("ERROR:\t%s\t(%X, %s)"%(errorChr, error, errorStr))
-	
-
-
+	#print("ERROR:\t%s\t(%X, %s)"%(errorChr, error, errorStr))
+	print("NAK:\t%s\t(%X, %s)"%(errorChr, error, errorStr))
