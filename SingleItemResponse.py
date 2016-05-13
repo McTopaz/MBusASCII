@@ -195,8 +195,8 @@ else:
 
 if isAck:
 	#print("DATA:\t%s"%(data))
-	print("ACK:\t%s"%(data))
+	print("[ACK] %s"%(data))
 	
 if isNak:
 	#print("ERROR:\t%s\t(%X, %s)"%(errorChr, error, errorStr))
-	print("NAK:\t%s\t(%X, %s)"%(errorChr, error, errorStr))
+	print("[NAK] %s (%X, %s)"%(errorChr, error, errorStr))
